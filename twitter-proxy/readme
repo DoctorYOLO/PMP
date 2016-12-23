@@ -1,0 +1,4 @@
+1. Install NodeJS http://nodejs.org/download/
+2. Replace twitter tokens in twitter-proxy.js
+3. Start server (cmd): "node twitter-proxy.js"
+	

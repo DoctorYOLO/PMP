@@ -1,0 +1,133 @@
+<!doctype html>
+<html>
+    
+    <head>
+        <meta charset="utf-8">
+        <title>(Это title) Пример страницы на HTML5</title>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+		<style type="text/css">
+			header {
+				border-style: dashed;
+				border-width: 0 0 1px 0;
+				margin-bottom: 20px;
+				padding: 10px
+			}
+			header h2 {
+				text-align: center;
+			}
+			#tweets article {
+				margin-bottom: 20px;
+			}
+			#tweets article h1 img {
+				float: left;
+			}
+			#tweets article h1 span {
+				font-size: 14px;
+				color: blue;
+			}
+			#tweets article details span {
+				font-size: 12px;
+				color: gray;
+			}
+		</style>
+    </head>
+    
+    <body>
+        <header>
+             <h2>Заголовок страницы</h2>
+
+        </header>
+        <!-- Блок навигации -->
+        <nav></nav>
+        <!-- Основной блок -->
+        <section id="content">
+            <!-- Блок элементов управления -->
+            <section id="controls"></section>
+            <!-- Блок твитов -->
+            <section id="tweets"></section>
+        </section>
+        <footer>
+            <p>Подвал страницы</p>
+        </footer>
+		
+		<script type="text/javascript">
+		
+			//
+			// Пример выполнения AJAX-запроса к Twitter API
+			//
+			$(document).ready(function() {					
+
+				// Точка входа в Proxy
+				var apiEndPoint = "http://localhost:8888/1.1/";
+
+				// Параметры запроса, описаны здесь 
+				// https://dev.twitter.com/docs/api/1/get/statuses/user_timeline
+				var params = {
+					include_entities: true,
+					include_rts: true,
+					screen_name: "nytimes",
+					count: 7
+				};
+
+				// Выполняем асинхронный запрос с помощью библиотеки jQuery
+				$.ajax({
+					// Полный URL до ресурса    
+					url: apiEndPoint + "statuses/user_timeline.json",
+
+					// Тип HTTP-запроса
+					type: "GET",
+
+					// Тип возвращаемых данных
+					dataType: "jsonp",
+
+					// Параметры
+					data: params,
+
+					// Функция-обработчик успешного ответа
+					success: function (response) {
+						// пробежимся по массиву response
+						$.each(response, function (i, item) {
+							//console.dir(item);
+
+							// оборачиваем данные в html и вставляем в секцию #tweets
+							var $header = $("<h1>")
+								.append($("<img>", { src: item.user.profile_image_url}))
+								.append($("<span>").html(item.user.name));
+
+							var $text = $("<p>").html(item.text);
+
+							var $details = $("<details>").append(
+								$("<span>").html(item.created_at)
+							);
+
+							$("<article>", { id: item.id })
+								.append($header, $text, $details)
+								.appendTo("#tweets");
+						});
+					},
+
+					// Функция-обработчик при возникновении ошибки
+					error: function (xhr, status, error) {
+						alert("Произошла ошибка: " + status);
+					}
+			});
+
+			/*
+			ИЛИ 
+			можно использовать краткий метод
+
+			$.getJSON("https://api.twitter.com/1/statuses/user_timeline.json?callback=?", params, function(data) {
+				console.dir(data);
+			})
+			.error(function(xhr, status, error) {
+				console.log(xhr);
+			});
+			*/
+			});
+			
+		</script>
+		
+    </body>
+		
+
+</html>
