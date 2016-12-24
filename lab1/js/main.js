@@ -47,7 +47,7 @@ function loadTweets() {
                     );
                     var dateSince = new Date(parseInt(timeSinceStr.substr(0, 4)),
                                              parseInt(timeSinceStr.substr(5, 2)) - 1,
-                                             parseInt(timeSinceStr.substr(8) + 1)
+                                             parseInt(timeSinceStr.substr(8)) + 1
                     );
 
                     if (timeFrom <= tweetDate && tweetDate <= dateSince) {
